@@ -1,0 +1,22 @@
+Resources:
+  SSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: my-ssm-string
+      Type: String
+      Value: helloworld
+
+  SS:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: my-ss-secret
+      SecretString: '{"username-ss":"MasterUsername","password-ss":"secret-password"}'
+      
+Outputs:
+  SSM:
+    Value: !Ref SSM
+  
+  SS:
+    Value: !Ref SS
+
+        

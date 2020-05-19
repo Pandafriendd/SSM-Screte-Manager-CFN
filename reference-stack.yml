@@ -1,0 +1,98 @@
+Parameters: 
+  SSM1: 
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: my-ssm-string
+
+  SSM2: 
+    Type: String
+    Default: "{{resolve:ssm-secure:my-ssm-secure-string:5}}"
+  
+  SS1: 
+    Type: String
+    Default: "{{resolve:secretsmanager:my-ss-secret:SecretString:username-ss}}"
+  
+  SS2:
+    Type: String
+    Default: "{{resolve:secretsmanager:my-ss-secret:SecretString:password-ss}}"
+  
+  SS3: 
+    Type: String
+    Default: "{{resolve:secretsmanager:my-ss-secret:SecretString}}"
+  
+  SS4: 
+    Type: String
+    Default: "{{resolve:secretsmanager:my-ss-secret}}"
+  
+  SS5: 
+    Type: "{{resolve:secretsmanager:my-ss-secret:SecretString:username-ss}}"
+
+Resources:
+  Test:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: test-1
+      Type: String
+      Value: abcd
+      Tags:
+        t1: !Ref SSM1
+      Description: !Ref SS1
+  
+  Test2:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: test-2
+      Type: String
+      Value: abcd
+      Description: !Ref SS3
+  
+  Test3:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: test-3
+      Type: String
+      Value: abcd
+      Description: !Ref SS4
+  
+  MyUser:
+    Type: AWS::IAM::User
+    Properties:
+      LoginProfile:
+        Password:
+          Ref: SSM2
+  
+  # myReplicationGroup:
+  #   Type: 'AWS::ElastiCache::ReplicationGroup'
+  #   Properties:
+  #     AuthToken: !Ref SSM2
+  #     ReplicationGroupDescription: my description
+  #     NumCacheClusters: '2'
+  #     Engine: redis
+  #     CacheNodeType: cache.m3.medium
+  #     AutoMinorVersionUpgrade: 'true'
+  #     AutomaticFailoverEnabled: 'true'
+  #     CacheSubnetGroupName: subnetgroup
+  #     EngineVersion: 2.8.6
+  #     PreferredMaintenanceWindow: 'wed:09:25-wed:22:30'
+  #     SnapshotRetentionLimit: '4'
+  #     SnapshotWindow: '03:30-05:30'
+  #     TransitEncryptionEnabled: true
+           
+Outputs:
+  SSM1Out:
+    Value: !Ref SSM1
+  
+  # SSM2Out:
+  #   Value: !Ref SSM2
+  
+  SSOut1:
+    Value: "{{resolve:secretsmanager:my-ss-secret:SecretString:username-ss}}"
+  
+  SSOut2:
+    Value: !Ref SS2
+  
+  SSOut3:
+    Value: !Ref SS3
+
+  SSOut4:
+    Value: !Ref SS4
+  
